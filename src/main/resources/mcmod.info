@@ -1,0 +1,21 @@
+[
+{
+  "modid": "plenainanis",
+  "name": "Plena Inanis",
+  "description": "Full on Empty",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://minecraft.curseforge.com/projects/plena-inanis",
+  "updateUrl": "",
+  "authorList": [
+    "Dagarath"
+  ],
+  "credits": "",
+  "logoFile": "assets/plenainanis/textures/PlenaInanis.png",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]

@@ -1,0 +1,21 @@
+//Creative Tab
+itemGroup.tabPlenaInanis=Plena Inanis
+
+//Tile Entities
+container.tilePlenaComposter=Composter
+
+//Blocks
+tile.composter.name=Composter
+tile.squasher.name=Block Squasher
+tile.sieve.name=Sieve
+tile.richSoil.name=Rich Soil
+tile.blockCompost.name=Compost Block
+tile.crucible.name=Crucible
+
+//Items
+item.compost.name=Compost
+fertilizer.name=Fertilizer
+happyfertilizer.name=Happy Fertilizer
+supermegamegafertilizer.name=Super Mega Mega Fertilizer
+item.smasher.name=Block Smasher
+item.pebble.name=Pebble

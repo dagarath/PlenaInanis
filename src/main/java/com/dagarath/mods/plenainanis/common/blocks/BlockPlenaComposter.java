@@ -41,14 +41,7 @@ public class BlockPlenaComposter extends BlockContainer {
         blockParticleGravity = 1.0F;
         slipperiness = 0.6F;
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-        setTickRandomly(false);
         useNeighborBrightness = false;
-    }
-
-
-    @Override
-    public void updateTick(World world, int x, int y, int z, Random interval) {
-
     }
 
     @Override
@@ -126,6 +119,8 @@ public class BlockPlenaComposter extends BlockContainer {
             player.openGui(PlenaInanis.instance, GuiHandler.COMPOST_GUI, world, x, y, z);
             if(ConfigurationHandler.compostSound.getBoolean()) {
                 world.playSoundAtEntity(player, PlenaInanisReference.MODID + ":bloop", 1.0f, 1.0f);
+            }else{
+                world.playSoundAtEntity(player, "random.chestopen", 1.0f, 1.0f);
             }
             te.setOpen(true);
         }
@@ -135,6 +130,7 @@ public class BlockPlenaComposter extends BlockContainer {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block){
+        //super.onNeighborBlockChange(world, x, y, z, block);
         if(world.getBlock(x, y + 1, z) != Blocks.air){
             Block blockToMove = world.getBlock(x, y + 1, z);
             world.setBlockToAir(x, y + 1, z);

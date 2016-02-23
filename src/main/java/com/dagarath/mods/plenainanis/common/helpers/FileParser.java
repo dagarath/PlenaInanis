@@ -22,7 +22,7 @@ public class FileParser {
     static File file;
     public static List<String> fileInfo = new ArrayList<>();
 
-    private final static String versionFile = "Plena Inanis/build.properties";
+    private final static String versionFile = "../Plena Inanis/build.properties";
     static File verFile = new File(versionFile);
 
     public static boolean exists(String fileName){
@@ -39,8 +39,7 @@ public class FileParser {
                 String strLine;
 
                 while((strLine = br.readLine()) != null){
-                    //System.out.println(strLine);
-                    fileInfo.add(strLine);
+                        fileInfo.add(strLine);
                 }
                 return fileInfo;
             }

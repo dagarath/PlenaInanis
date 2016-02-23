@@ -4,16 +4,11 @@ import com.dagarath.mods.plenainanis.PlenaInanis;
 import com.dagarath.mods.plenainanis.common.blocks.BlockPlenaCrucible;
 import com.dagarath.mods.plenainanis.common.containers.PlenaCrucibleContainer.SlotType;
 import com.dagarath.mods.plenainanis.common.helpers.InfoHelper;
-import com.ibm.icu.text.IDNA;
-import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
-import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.*;
@@ -25,9 +20,9 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Created by dagarath on 2016-02-11.
@@ -37,6 +32,7 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
     private int direction;
     private boolean isOpen;
     private boolean opening;
+    private String customName = "Crucible";
 
     public int crucibleBurnTime = 0;
     public int crucibleCookTime = 0;
@@ -85,6 +81,9 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
         data.setBoolean("Dumping", this.dumping);
         data.setBoolean("Purging", this.purging);
 
+        if (this.hasCustomInventoryName()) {
+            data.setString("CustomName", this.getCustomName());
+        }
 
         NBTTagList list = new NBTTagList();
         for (int i = 0; i < this.getSizeInventory(); ++i) {
@@ -131,6 +130,10 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
             this.purging = data.getBoolean("Purging");
         }
 
+        if (data.hasKey("CustomName", 8)) {
+            this.setCustomName(data.getString("CustomName"));
+        }
+
         NBTTagList list = data.getTagList("Items", 10);
         this.inventory = new ItemStack[this.getSizeInventory()];
         for (int i = 0; i < list.tagCount(); ++i) {
@@ -149,6 +152,14 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
         if(containsAnyInputs() && PlenaInanis.crucibleCookTimes.containsKey(InfoHelper.getFullNameForItemStack(getStackInSlot(getFirstItemToSmelt())))){
             this.currentItemCookTime = PlenaInanis.crucibleCookTimes.get(InfoHelper.getFullNameForItemStack(getStackInSlot(getFirstItemToSmelt())));
         }
+    }
+
+    public String getCustomName() {
+        return this.customName;
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
     }
 
     @Override
@@ -326,7 +337,7 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
 
                                     }else {
                                         FluidStack fluidStack = this.tank.getInfo().fluid;
-                                        fluidStack.amount += 1000D;
+                                        fluidStack.amount += 1000;
                                         this.tank.setFluid(fluidStack);
                                     }
                                 }
@@ -342,7 +353,7 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
 
                                     }else {
                                         FluidStack fluidStack = this.tank.getInfo().fluid;
-                                        fluidStack.amount += 1000D;
+                                        fluidStack.amount += 1000;
                                         this.tank.setFluid(fluidStack);
                                     }
                                 }
@@ -358,7 +369,7 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
 
                                     }else {
                                         FluidStack fluidStack = this.tank.getInfo().fluid;
-                                        fluidStack.amount += 1000D;
+                                        fluidStack.amount += 1000;
                                         this.tank.setFluid(fluidStack);
                                     }
                                 }
@@ -383,9 +394,19 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
                                 this.crucibleCookTime--;
                                 this.temperature--;
                                 if (this.crucibleCookTime == 0) {
-                                    FluidStack fluidStack = this.tank.getFluid();
-                                    fluidStack.amount += 1000D;
-                                    this.tank.setFluid(fluidStack);
+                                    if(this.tank.getInfo().fluid != null) {
+                                        FluidStack fluidStack = this.tank.getFluid();
+                                        fluidStack.amount += 1000;
+                                        this.tank.setFluid(fluidStack);
+                                        this.decrStackSize(currentItemProcessing, 1);
+                                        this.currentItemProcessing = 0;
+                                    }else{
+                                        FluidStack fluidStack = FluidRegistry.getFluidStack(PlenaInanis.crucibleAllowedItems.get(InfoHelper.getFullNameForItemStack(getStackInSlot(currentItemProcessing))), 1000);
+                                        fluidStack.amount = 1000;
+                                        this.tank.setFluid(fluidStack);
+                                        this.decrStackSize(currentItemProcessing, 1);
+                                        this.currentItemProcessing = 0;
+                                    }
                                 }
                             }
                         }
@@ -460,86 +481,52 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
     }
 
     public void transferLiquidsInternally(){
-        if (getStackInSlot(2) != null) {
-            if (getStackInSlot(2).getItem() == Items.bucket) {
-                if (tank.getInfo().fluid != null) {
-                    if (tank.getInfo().fluid.amount >= 1000) {
-                        if (tank.getInfo().fluid.getFluid() == FluidRegistry.LAVA) {
-                            ItemStack outputStack = new ItemStack(Items.lava_bucket);
-                            if (getStackInSlot(3) == null) {
-                                if (getStackInSlot(2) != null && getStackInSlot(2).stackSize > 1) {
-                                    decrStackSize(2, 1);
-                                } else {
-                                    setInventorySlotContents(2, null);
-                                }
-                                setInventorySlotContents(3, outputStack);
-                                this.tank.drain(1000, true);
-                            }
+        if (getStackInSlot(SlotType.CONTAINER_INPUT.ordinal()) != null) {
 
-                        } else if (tank.getInfo().fluid.getFluid() == FluidRegistry.WATER) {
-                            ItemStack outputStack = new ItemStack(Items.water_bucket);
-                            if (getStackInSlot(3) == null) {
-                                if (getStackInSlot(2) != null && getStackInSlot(2).stackSize > 1) {
-                                    decrStackSize(2, 1);
+            FluidStack testFluid = this.tank.getInfo().fluid;
+            ItemStack containerStack = getStackInSlot(SlotType.CONTAINER_INPUT.ordinal());
+            if(testFluid != null){
+                FluidContainerData[] data = FluidContainerRegistry.getRegisteredFluidContainerData();
+                for(int i = 0; i < data.length; i++){
+                    FluidContainerData testData = data[i];
+                    if (containerStack.getUnlocalizedName().equals(testData.emptyContainer.getUnlocalizedName()) && testFluid.getFluid().getUnlocalizedName().equals(testData.fluid.getUnlocalizedName())) {
+                        ItemStack returnStack = testData.filledContainer.copy();
+                        if (getStackInSlot(SlotType.CONTAINER_OUTPUT.ordinal()) == null) {
+                            this.setInventorySlotContents(SlotType.CONTAINER_OUTPUT.ordinal(), returnStack);
+                            this.tank.drain(FluidContainerRegistry.getContainerCapacity(testData.filledContainer), true);
+                            decrStackSize(SlotType.CONTAINER_INPUT.ordinal(), 1);
+                        }
+                    }else if(getStackInSlot(SlotType.CONTAINER_OUTPUT.ordinal()) == null || getStackInSlot(SlotType.CONTAINER_OUTPUT.ordinal()).getUnlocalizedName().equals(testData.emptyContainer.getUnlocalizedName())) {
+                        if (containerStack.getUnlocalizedName().equals(testData.filledContainer.getUnlocalizedName()) && testFluid.getFluid().getUnlocalizedName().equals(testData.fluid.getUnlocalizedName())) {
+                            ItemStack returnStack = testData.emptyContainer.copy();
+                            if(this.tank.getInfo().fluid.amount < this.tank.getCapacity() - FluidContainerRegistry.getContainerCapacity(containerStack)) {
+                                if (getStackInSlot(SlotType.CONTAINER_OUTPUT.ordinal()) == null) {
+                                    this.setInventorySlotContents(SlotType.CONTAINER_OUTPUT.ordinal(), returnStack);
                                 } else {
-                                    setInventorySlotContents(2, null);
+                                    ItemStack slotStack = getStackInSlot(SlotType.CONTAINER_OUTPUT.ordinal());
+                                    slotStack.stackSize++;
+                                    this.setInventorySlotContents(SlotType.CONTAINER_OUTPUT.ordinal(), slotStack);
                                 }
-                                setInventorySlotContents(3, outputStack);
-                                this.tank.drain(1000, true);
+                                this.tank.getInfo().fluid.amount += FluidContainerRegistry.getContainerCapacity(containerStack);
+                                decrStackSize(SlotType.CONTAINER_INPUT.ordinal(), 1);
                             }
                         }
                     }
                 }
-            } else if (getStackInSlot(2).getItem() == Items.lava_bucket) {
-                if (tank.getInfo().fluid != null) {
-                    if (tank.getInfo().fluid.getUnlocalizedName().equals("fluid.tile.lava")) {
-                        if (getStackInSlot(3) != null && getStackInSlot(3).getItem() == Items.bucket) {
-                            ItemStack outputStack = getStackInSlot(3).copy();
-                            outputStack.stackSize++;
-                            FluidStack lavaStack = new FluidStack(FluidRegistry.LAVA, 1000);
-                            setInventorySlotContents(2, null);
-                            setInventorySlotContents(3, outputStack);
-                            this.tank.fill(lavaStack, true);
-                        } else if (getStackInSlot(3) == null) {
-                            FluidStack lavaStack = new FluidStack(FluidRegistry.LAVA, 1000);
-                            setInventorySlotContents(2, null);
-                            setInventorySlotContents(3, new ItemStack(Items.bucket));
-                            this.tank.fill(lavaStack, true);
-                        }
-
+            }else{
+                FluidContainerData[] data = FluidContainerRegistry.getRegisteredFluidContainerData();
+                for(int i = 0; i < data.length; i++) {
+                    FluidContainerData testData = data[i];
+                    if(containerStack.getUnlocalizedName().equals(testData.filledContainer.getUnlocalizedName())){
+                        this.tank.setFluid(testData.fluid);
+                        this.tank.getFluid().amount = 1000;
+                        this.setInventorySlotContents(SlotType.CONTAINER_OUTPUT.ordinal(), testData.emptyContainer.copy());
+                        decrStackSize(SlotType.CONTAINER_INPUT.ordinal(), 1);
                     }
-                } else {
-                    FluidStack lavaStack = new FluidStack(FluidRegistry.LAVA, 1000);
-                    setInventorySlotContents(2, null);
-                    setInventorySlotContents(3, new ItemStack(Items.bucket));
-                    this.tank.fill(lavaStack, true);
-                }
-            } else if (getStackInSlot(2).getItem() == Items.water_bucket) {
-                if (tank.getInfo().fluid != null) {
-                    if (tank.getInfo().fluid.getUnlocalizedName().equals("fluid.tile.water")) {
-                        if (getStackInSlot(3) != null && getStackInSlot(3).getItem() == Items.bucket) {
-                            ItemStack outputStack = getStackInSlot(3).copy();
-                            outputStack.stackSize++;
-                            FluidStack waterStack = new FluidStack(FluidRegistry.WATER, 1000);
-                            setInventorySlotContents(2, null);
-                            setInventorySlotContents(3, outputStack);
-                            this.tank.fill(waterStack, true);
-                        } else if (getStackInSlot(3) == null) {
-                            FluidStack waterStack = new FluidStack(FluidRegistry.WATER, 1000);
-                            setInventorySlotContents(2, null);
-                            setInventorySlotContents(3, new ItemStack(Items.bucket));
-                            this.tank.fill(waterStack, true);
-                        }
-
-                    }
-                } else {
-                    FluidStack lavaStack = new FluidStack(FluidRegistry.WATER, 1000);
-                    setInventorySlotContents(2, null);
-                    setInventorySlotContents(3, new ItemStack(Items.bucket));
-                    this.tank.fill(lavaStack, true);
                 }
             }
         }
+
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 
@@ -710,12 +697,12 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
 
     @Override
     public String getInventoryName() {
-        return "Crucible";
+        return this.hasCustomInventoryName() ? this.customName : "container.crucible";
     }
 
     @Override
     public boolean hasCustomInventoryName() {
-        return false;
+        return this.customName != null && !this.customName.equals("");
     }
 
     @Override
@@ -725,7 +712,7 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer player) {
-        return true;
+        return this.worldObj.getTileEntity(xCoord,yCoord,zCoord) == this && player.getDistanceSq(xCoord,yCoord,zCoord) <= 64;
     }
 
     @Override
@@ -753,10 +740,7 @@ public class TilePlenaCrucible extends TileEntity implements IFluidHandler, ISid
                 }
                 break;
             case 2:
-                if(itemStack.getItem() == Items.lava_bucket || itemStack.getItem() == Items.bucket || itemStack.getItem() == Items.water_bucket){
-                    return true;
-                }
-                break;
+                return true;
         }
         return false;
     }

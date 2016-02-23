@@ -27,6 +27,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -51,12 +52,17 @@ public class PlenaInanis {
     public static HashMap<String, Integer> crucibleCookTimes = new HashMap<>();
     public static HashMap<String, Integer> crucibleBurnTimes = new HashMap<>();
     public static HashMap<String, Integer> crucibleFuelTemps = new HashMap<>();
+    public static HashMap<String, String> bucketNameFluidPair = new HashMap<>();
+    public static HashMap<String, String> bucketFluidOutputPair = new HashMap<>();
+
+    public boolean debugMode = false;
 
 
     public static final String burnFileName = "config/Dagarath/crucible/burnTimes.cfg";
     public static final String cookFileName = "config/Dagarath/crucible/cookTimes.cfg";
     public static final String temperatureFileName = "config/Dagarath/crucible/temperatureData.cfg";
     public static final String allowedItemsFileName = "config/Dagarath/crucible/crucibleWhitelist.cfg";
+    public static final String bucketListFileName = "config/Dagarath/crucible/bucketList.cfg";
 
     public static CreativeTabs tabPlenaInanis = new CreativeTabs("tabPlenaInanis")
     {
@@ -75,7 +81,7 @@ public class PlenaInanis {
         ConfigurationHandler.init(event.getSuggestedConfigurationFile());
         proxy.preInit(event);
         logger = event.getModLog();
-        FileParser.setVersion();
+        if(debugMode) {FileParser.setVersion();}
         crucibleBurnTimes = FileParser.readStringIntHash(burnFileName,crucibleBurnTimes);
         crucibleFuelTemps = FileParser.readStringIntHash(temperatureFileName, crucibleFuelTemps);
         crucibleAllowedItems = FileParser.readStringStringHash(allowedItemsFileName, crucibleAllowedItems);

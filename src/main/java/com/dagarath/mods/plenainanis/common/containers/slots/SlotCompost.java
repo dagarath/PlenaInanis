@@ -1,8 +1,10 @@
 package com.dagarath.mods.plenainanis.common.containers.slots;
 
 import com.dagarath.mods.plenainanis.PlenaInanis;
+import com.dagarath.mods.plenainanis.common.containers.PlenaComposterContainer;
 import com.dagarath.mods.plenainanis.common.helpers.InfoHelper;
-import com.dagarath.mods.plenainanis.common.helpers.PlenaSaveData;
+import com.dagarath.mods.plenainanis.common.items.ItemAirflowUpgrade;
+import com.dagarath.mods.plenainanis.common.items.ItemMoistureUpgrade;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -21,14 +23,8 @@ public class SlotCompost extends Slot {
     }
 
 
-//    @Override
-//    public boolean isItemValid(ItemStack itemStack){
-//        if(!PlenaInanis.saveData.machineDataExists("Composter")) {
-//            PlenaInanis.saveData.createMachineData("Composter");
-//        }
-//        this.machineData = PlenaInanis.saveData.readMachineData("Composter");
-//        String itemName = InfoHelper.getFullNameForItemStack(itemStack);
-//        return machineData.inputExists(itemName, itemStack.getItemDamage());
-//    }
-
+    @Override
+    public boolean isItemValid(ItemStack itemStack){
+        return true;
+    }
 }

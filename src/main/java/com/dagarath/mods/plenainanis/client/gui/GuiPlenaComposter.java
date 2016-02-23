@@ -15,66 +15,42 @@ import org.lwjgl.opengl.GL11;
  */
 public class GuiPlenaComposter extends GuiContainer {
 
-    private IInventory playerInv;
-    private TilePlenaComposter tile;
+    private TilePlenaComposter tileComposter;
+    private PlenaComposterContainer container;
 
-    public GuiPlenaComposter(IInventory playerInv, TilePlenaComposter tile){
-        super(new PlenaComposterContainer(playerInv, tile));
-        this.playerInv = playerInv;
-        this.tile = tile;
-        this.xSize = 176;
+    public GuiPlenaComposter(PlenaComposterContainer container, TilePlenaComposter tile){
+        super(container);
+        this.container = container;
+        this.tileComposter = tile;
+        this.xSize = 241;
         this.ySize = 166;
+    }
+
+    @Override
+    public void initGui(){
+        super.initGui();
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         this.mc.getTextureManager().bindTexture(new ResourceLocation(PlenaInanisReference.MODID + ":textures/gui/container/composter.png"));
 
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(this.guiLeft + 31, this.guiTop, 0, 0, 176, this.ySize);
+
+        this.drawTexturedModalRect(this.guiLeft + 209, this.guiTop + 10, 1, 168, 100, 47);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        String s = this.tile.getCustomName();
-        this.fontRendererObj.drawString(s, 88 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);        //#404040
-        this.fontRendererObj.drawString("Inventory", 8, 72, 4210752);                     //#404040
-
-        GL11.glDepthMask(false);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_BLEND);
-
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-        GL11.glPushMatrix();
-
-        Tessellator tes = Tessellator.instance;
-        GL11.glTranslatef(115, 73, 0);
-        tes.startDrawingQuads();
-        tes.setColorRGBA_F(0.0F, 0.0F, 0.0F, 1.0F);
-        tes.addVertex(0, 0, 0);
-        tes.addVertex(0, 6, 0);
-        tes.addVertex(34, 6, 0);
-        tes.addVertex(34, 0, 0);
-        tes.draw();
-        GL11.glPushMatrix();
-        // System.out.println("Calculated Ratio: " +  ConfigurationHandler.compostCost.getInt());
-        float progress = this.tile.getProgressScaled(100);
-        progress = progress / 100;
-        //PlenaInanis.logger.debug("Progess: "+ progress + "/1");
-        tes.startDrawingQuads();
-        tes.setColorRGBA_F(0.0F, 1.0F, 0.0F, 1.0F);
-        tes.addVertex(0, 0, 0);
-        tes.addVertex(0, 6, 0);
-        tes.addVertex(34 * progress, 6, 0);
-        tes.addVertex(34 * progress, 0, 0);
-        tes.draw();
-        GL11.glPopMatrix();
-        GL11.glPopMatrix();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_LIGHTING);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+        String s = this.tileComposter.getCustomName();
+        this.fontRendererObj.drawString(s, 88 - this.fontRendererObj.getStringWidth(s) / 2  + 31, 6, 4210752);        //#404040
+        this.fontRendererObj.drawString("Inventory", 8 + 31, 72, 4210752);                     //#404040
+        this.fontRendererObj.drawStringWithShadow("Humidity", 237, 19, 0xEEEEEE);
+        this.fontRendererObj.drawStringWithShadow("Airflow", 237, 40, 0xEEEEEE);
+        String humidity = "" + (this.tileComposter.getMoisture() * 10);
+        String airflow = "" + (this.tileComposter.getAirflow() * 10);
+        this.fontRendererObj.drawStringWithShadow(humidity + "%", 284, 19, 0xFFFF00);
+        this.fontRendererObj.drawStringWithShadow(airflow + "%", 284, 40, 0xFFFF00);
     }
 }

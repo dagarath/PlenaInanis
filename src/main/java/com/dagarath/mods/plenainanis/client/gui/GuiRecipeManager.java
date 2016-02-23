@@ -516,7 +516,6 @@ public class GuiRecipeManager extends GuiContainer {
         }else{
             PlenaInanis.proxy.getPlayer().addChatMessage(new ChatComponentText("Remove item from input slot"));
         }
-        PlenaInanis.logger.info("Par 1: " + par1 + "  Par2: " + par2);
         if(par1 == '\t'){
             if(this.weightValue.isFocused()){
                 this.weightValue.setFocused(false);

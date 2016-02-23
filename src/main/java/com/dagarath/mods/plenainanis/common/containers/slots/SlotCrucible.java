@@ -36,7 +36,7 @@ public class SlotCrucible extends Slot {
             if(PlenaInanis.crucibleAllowedItems.containsKey(InfoHelper.getFullNameForItemStack(itemStack))) {
                 return true;
             }
-        }else if(getSlotIndex() == 2 && itemStack.getItem() == Items.bucket || itemStack.getItem() == Items.lava_bucket || itemStack.getItem() == Items.water_bucket) {
+        }else if(getSlotIndex() == 2) {
             return true;
         }
 

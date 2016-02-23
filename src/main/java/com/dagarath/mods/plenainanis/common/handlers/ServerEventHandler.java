@@ -66,7 +66,6 @@ public class ServerEventHandler {
                 if(itemStack != null && itemStack.getItem() != null && Block.getBlockFromItem(itemStack.getItem()) != null){
 //                    event.useBlock = Event.Result.DEFAULT;
                     composter.onBlockActivated(event.world, event.x, event.y, event.z, player, 0, 0, 0 ,0);
-                    event.useItem = Event.Result.DENY;
                 }
             }else if(event.world.getBlock(event.x, event.y, event.z) instanceof BlockPlenaCrucible){
                 if(event.entityPlayer.getCurrentEquippedItem() != null) {

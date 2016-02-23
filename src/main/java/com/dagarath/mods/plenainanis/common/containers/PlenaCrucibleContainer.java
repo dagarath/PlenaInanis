@@ -7,10 +7,13 @@ import com.dagarath.mods.plenainanis.common.tileentitites.TilePlenaCrucible;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemBucket;
+import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -30,10 +33,10 @@ public class PlenaCrucibleContainer extends Container {
 
     public PlenaCrucibleContainer(IInventory playerInv, TilePlenaCrucible tile) {
         this.tile = tile;
-        this.addSlotToContainer(new SlotCrucible(tile, SlotType.FUEL.ordinal(), 8, 35));
-        this.addSlotToContainer(new SlotCrucible(tile, SlotType.PROCESS_INPUT.ordinal(), 77, 17));
-        this.addSlotToContainer(new SlotCrucible(tile, SlotType.CONTAINER_INPUT.ordinal(), 110, 17));
-        this.addSlotToContainer(new SlotCrucible(tile, SlotType.CONTAINER_OUTPUT.ordinal(), 110, 53));
+        this.addSlotToContainer(new SlotCrucible(this.tile, SlotType.FUEL.ordinal(), 8, 35));
+        this.addSlotToContainer(new SlotCrucible(this.tile, SlotType.PROCESS_INPUT.ordinal(), 77, 17));
+        this.addSlotToContainer(new SlotCrucible(this.tile, SlotType.CONTAINER_INPUT.ordinal(), 110, 17));
+        this.addSlotToContainer(new SlotCrucible(this.tile, SlotType.CONTAINER_OUTPUT.ordinal(), 110, 53));
 
         // Player Inventory, Slot 13-39, Slot IDs 13-39
         for (int y = 0; y < 3; ++y) {
@@ -81,25 +84,33 @@ public class PlenaCrucibleContainer extends Container {
             ItemStack newStack = slot.getStack();
             itemStack = newStack.copy();
 
-            if(fromSlot > SlotType.FUEL.ordinal() && fromSlot <= SlotType.CONTAINER_OUTPUT.ordinal()){
+            if(fromSlot < tile.getSizeInventory()){
                 if(!this.mergeItemStack(newStack, SlotType.CONTAINER_OUTPUT.ordinal() + 1, SlotType.CONTAINER_OUTPUT.ordinal() + 36 + 1, true)){
                     return null;
                 }
-                slot.onSlotChange(newStack, itemStack);
+            }else if(newStack.getItem() instanceof ItemBucket) {
+                if (!this.mergeItemStack(newStack, SlotType.CONTAINER_INPUT.ordinal(), SlotType.CONTAINER_INPUT.ordinal() + 1, false)) {
+                    return null;
+                }
+            }else if(PlenaInanis.crucibleFuelTemps.containsKey(InfoHelper.getFullNameForItemStack(itemStack))){
+                if(!this.mergeItemStack(newStack, SlotType.FUEL.ordinal(), SlotType.FUEL.ordinal() + 1, false)){
+                    return null;
+                }
+            }else if( PlenaInanis.crucibleAllowedItems.containsKey(InfoHelper.getFullNameForItemStack(itemStack))){
+                if(!this.mergeItemStack(newStack, SlotType.PROCESS_INPUT.ordinal(), SlotType.PROCESS_INPUT.ordinal() + 1, false)){
+                    return null;
+                }
+            }else {
+                return null;
             }
-            if(fromSlot != SlotType.FUEL.ordinal()){
-                if(PlenaInanis.crucibleFuelTemps.containsKey(InfoHelper.getFullNameForItemStack(itemStack))){
-                    if(!this.mergeItemStack(newStack, SlotType.FUEL.ordinal(), SlotType.FUEL.ordinal() + 1, true)){
-                        return null;
-                    }
-                }
-                if(PlenaInanis.crucibleAllowedItems.containsKey(InfoHelper.getFullNameForItemStack(itemStack))){
-                    if(!this.mergeItemStack(newStack, SlotType.PROCESS_INPUT.ordinal(), SlotType.PROCESS_INPUT.ordinal() +1, true)){
-                        return null;
-                    }
-                }
 
+            if(newStack.stackSize == 0){
+                slot.putStack((ItemStack)null);
             }
+            else{
+                slot.onSlotChanged();
+            }
+            slot.onPickupFromSlot(player, newStack);
         }
         return itemStack;
     }

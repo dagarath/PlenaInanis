@@ -26,14 +26,14 @@ public class GuiHandler implements IGuiHandler {
         {
             return new PlenaComposterContainer(player.inventory, (TilePlenaComposter) world.getTileEntity(x, y, z));
         }
-        if(ID == RECIPE_MAKER_GUI)
-        {
-
-            return new PlenaRecipeManagerContainer(player.inventory);
-        }
         if(ID == CRUCIBLE_GUI){
             return new PlenaCrucibleContainer(player.inventory, (TilePlenaCrucible) world.getTileEntity(x,y,z));
         }
+        if(ID == RECIPE_MAKER_GUI)
+        {
+            return new PlenaRecipeManagerContainer(player.inventory);
+        }
+
         return null;
     }
 
@@ -41,15 +41,16 @@ public class GuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == COMPOST_GUI)
         {
-            return new GuiPlenaComposter(player.inventory, (TilePlenaComposter) world.getTileEntity(x, y, z));
+            return new GuiPlenaComposter(new PlenaComposterContainer(player.inventory, (TilePlenaComposter) world.getTileEntity(x, y, z)),(TilePlenaComposter) world.getTileEntity(x, y, z));
+        }
+        if(ID == CRUCIBLE_GUI){
+            return new GuiPlenaCrucible(new PlenaCrucibleContainer(player.inventory, (TilePlenaCrucible)world.getTileEntity(x, y, z)), (TilePlenaCrucible) world.getTileEntity(x, y, z));
         }
         if(ID == RECIPE_MAKER_GUI)
         {
             return new GuiRecipeManager(new PlenaRecipeManagerContainer(player.inventory));
         }
-        if(ID == CRUCIBLE_GUI){
-            return new GuiPlenaCrucible(new PlenaCrucibleContainer(player.inventory, (TilePlenaCrucible)world.getTileEntity(x, y, z)), (TilePlenaCrucible) world.getTileEntity(x, y, z));
-        }
+
         return null;
     }
 

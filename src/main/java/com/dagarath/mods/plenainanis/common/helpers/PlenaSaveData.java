@@ -154,6 +154,7 @@ public class PlenaSaveData implements Serializable {
                 }
             }
         }
+        ObjectSerializer.writeSave();
     }
 
     private boolean outputExists(String machineName, String inputName, String outputName){
@@ -170,6 +171,7 @@ public class PlenaSaveData implements Serializable {
 
     private void addOutput(String machineName, String inputName, OutputData outputData){
         parentMap.get(machineName).get(inputName).put(outputData.outputName, outputData);
+        ObjectSerializer.writeSave();
     }
     // </editor-fold>
 

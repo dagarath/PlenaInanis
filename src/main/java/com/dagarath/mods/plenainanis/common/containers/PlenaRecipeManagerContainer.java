@@ -91,33 +91,6 @@ public class PlenaRecipeManagerContainer extends Container {
     }
 
 
-    public void populateInventory(){
-        if(getSlot(0).getStack() == null) {
-            PlenaInanis.logger.warn("No input exists");
-        }else if(getSlot(0).getStack() != null){
-
-//            switch (PlenaInanis.saveData.getCurrentMachineIndex()) {
-//                case 0:
-//                    this.machineData = PlenaInanis.saveData.readMachineData("Composter");
-//                    if (this.machineData.inputExists(inputName(), getSlot(0).getStack().getItemDamage())) {
-//                        getAndSetOutputs();
-//                    }
-//                    break;
-//                case 1:
-//                    this.machineData = PlenaInanis.saveData.readMachineData("Sieve");
-//                    if (this.machineData.inputExists(inputName(), getSlot(0).getStack().getItemDamage())) {
-//                        getAndSetOutputs();
-//                    }
-//                    break;
-//                case 2:
-//                    this.machineData = PlenaInanis.saveData.readMachineData("Squasher");
-//                    if (this.machineData.inputExists(inputName(), getSlot(0).getStack().getItemDamage())) {
-//                        getAndSetOutputs();
-//                    }
-//                    break;
-//            }
-        }
-    }
 
     public String inputName(){
         ItemStack testStack = getSlot(0).getStack();
@@ -140,7 +113,6 @@ public class PlenaRecipeManagerContainer extends Container {
         }
         this.setEditMode(false);
         super.onContainerClosed(player);
-        //ObjectSerializer.writeSave();
     }
 
     @Override
@@ -166,7 +138,6 @@ public class PlenaRecipeManagerContainer extends Container {
 
             ItemStack newStack = slot.getStack();
             itemsStack = newStack.copy();
-//            PlenaInanis.logger.info("Slot: " + fromSlot + " itemStack: " + newStack.getUnlocalizedName());
             if (fromSlot == SlotType.INPUT.ordinal()) {
                 if (!this.mergeItemStack(newStack, SlotType.OUTPUT_12.ordinal() + 1, SlotType.OUTPUT_12.ordinal() + 36 + 1, true)) {
                     return null;
@@ -209,13 +180,6 @@ public class PlenaRecipeManagerContainer extends Container {
     @Override
     public ItemStack slotClick(int index, int p_75144_2_, int p_75144_3_, EntityPlayer player){
 
-//        if(index < 13 && !editMode()){
-//            PlenaInanis.logger.info("Slot info: " + index + " " + p_75144_2_ + " " + p_75144_3_);
-//            this.selectedOutput = index;
-//
-//        }else if (!editMode() && index > 13){
-//            this.selectedOutput = -1;
-//        }
         return super.slotClick(index, p_75144_2_, p_75144_3_, player);
     }
 

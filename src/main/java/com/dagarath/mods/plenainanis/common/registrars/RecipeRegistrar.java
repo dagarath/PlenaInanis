@@ -5,6 +5,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by dagarath on 2016-01-23.
@@ -30,6 +31,11 @@ public class RecipeRegistrar {
     static ItemStack compostItem;
     static ItemStack furnace;
     static ItemStack glass;
+    static ItemStack stick;
+    static ItemStack ironIngot;
+    static ItemStack goldIngot;
+    static ItemStack wool;
+    static ItemStack charcoal;
 
     public static void init(){
         oakPlanks = new ItemStack(Blocks.planks, 0,0);
@@ -52,6 +58,11 @@ public class RecipeRegistrar {
         compostItem = new ItemStack(ItemRegistrar.itemCompost);
         furnace = new ItemStack(Item.getItemFromBlock(Blocks.furnace));
         glass = new ItemStack(Item.getItemFromBlock(Blocks.glass));
+        stick = new ItemStack(Items.stick);
+        ironIngot = new ItemStack(Items.iron_ingot);
+        goldIngot = new ItemStack(Items.gold_ingot);
+        wool = new ItemStack(Item.getItemFromBlock(Blocks.wool), 1, OreDictionary.WILDCARD_VALUE);
+        charcoal = new ItemStack(Items.coal, 1, 1);
 
         registerComposters();
     }
@@ -147,5 +158,41 @@ public class RecipeRegistrar {
                 "ABA",
                 "AAA",
                 'A', furnace, 'B', glass});
+        //Minor Moisture Upgrade
+        GameRegistry.addShapedRecipe(new ItemStack(ItemRegistrar.itemMoisture, 1, 0), new Object[]{
+                " A ",
+                "ABA",
+                " A ",
+                'A', stick, 'B', charcoal});
+        //Minor Airflow Upgrade
+        GameRegistry.addShapedRecipe(new ItemStack(ItemRegistrar.itemAirflow, 1, 0), new Object[]{
+                " A ",
+                "ABA",
+                " A ",
+                'A', stick, 'B', wool});
+        //Average Moisture Upgrade
+        GameRegistry.addShapedRecipe(new ItemStack(ItemRegistrar.itemMoisture, 1, 1), new Object[]{
+                " A ",
+                "ABA",
+                " A ",
+                'A', ironIngot, 'B', new ItemStack(ItemRegistrar.itemMoisture, 1, 0)});
+        //Average Airflow Upgrade
+        GameRegistry.addShapedRecipe(new ItemStack(ItemRegistrar.itemAirflow, 1, 1), new Object[]{
+                " A ",
+                "ABA",
+                " A ",
+                'A', ironIngot, 'B', new ItemStack(ItemRegistrar.itemAirflow, 1, 0)});
+        //Major Moisture Upgrade
+        GameRegistry.addShapedRecipe(new ItemStack(ItemRegistrar.itemMoisture, 1, 2), new Object[]{
+                " A ",
+                "ABA",
+                " A ",
+                'A', goldIngot, 'B', new ItemStack(ItemRegistrar.itemMoisture, 1, 1)});
+        //Major Airflow Upgrade
+        GameRegistry.addShapedRecipe(new ItemStack(ItemRegistrar.itemAirflow, 1, 2), new Object[]{
+                " A ",
+                "ABA",
+                " A ",
+                'A', goldIngot, 'B', new ItemStack(ItemRegistrar.itemAirflow, 1, 1)});
     }
 }

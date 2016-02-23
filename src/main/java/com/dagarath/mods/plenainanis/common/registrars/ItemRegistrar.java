@@ -14,7 +14,8 @@ public class ItemRegistrar {
     public static Item itemFertilizer;
     public static Item itemPebble;
     public static Item itemBlockSmasher;
-    public static Item itemBlockCrucible;
+    public static Item itemAirflow;
+    public static Item itemMoisture;
 
 
 
@@ -25,6 +26,8 @@ public class ItemRegistrar {
             GameRegistry.registerItem(itemFertilizer = new ItemFertilizer("fertilizer"), "fertilizer");
             GameRegistry.registerItem(itemPebble = new ItemPebble(), "pebble");
             GameRegistry.registerItem(itemBlockSmasher = new ItemBlockSmasher(), "smasher");
+            GameRegistry.registerItem(itemAirflow = new ItemAirflowUpgrade(), "airflow");
+            GameRegistry.registerItem(itemMoisture = new ItemMoistureUpgrade(), "moisture");
 
         }catch(Exception e){
             System.err.println("plenainanis Item Registry Error: " + e);

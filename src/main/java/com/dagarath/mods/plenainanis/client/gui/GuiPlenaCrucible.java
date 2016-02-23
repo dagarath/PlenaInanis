@@ -4,21 +4,26 @@ import com.dagarath.mods.plenainanis.PlenaInanis;
 import com.dagarath.mods.plenainanis.client.gui.buttons.LargeButton;
 import com.dagarath.mods.plenainanis.client.gui.buttons.SmallButton;
 import com.dagarath.mods.plenainanis.common.containers.PlenaCrucibleContainer;
+import com.dagarath.mods.plenainanis.common.helpers.InfoHelper;
 import com.dagarath.mods.plenainanis.common.network.PacketHandler;
 import com.dagarath.mods.plenainanis.common.network.Packets.PacketDumpCrucible;
 import com.dagarath.mods.plenainanis.common.network.Packets.PacketPurgeCrucible;
 import com.dagarath.mods.plenainanis.common.tileentitites.TilePlenaCrucible;
 import com.dagarath.mods.plenainanis.config.PlenaInanisReference;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiFurnace;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidBlock;
 import org.lwjgl.opengl.GL11;
 
 import java.text.NumberFormat;
@@ -59,10 +64,10 @@ public class GuiPlenaCrucible extends GuiContainer {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         //Temperature Gauge
-        GL11.glDisable(GL11.GL_BLEND);
         Tessellator tes = new Tessellator();
         if(this.tileCrucible.temperature > 0.000000000f) {
             GL11.glPushMatrix();
+            GL11.glDisable(GL11.GL_BLEND);
             double scale = 8000D;
             double i1 = this.tileCrucible.getTotalTemperatureScaled(scale);
             double uMin1 = 177f / 256f ;
@@ -151,6 +156,9 @@ public class GuiPlenaCrucible extends GuiContainer {
     @Override
     public void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
+        String s = this.tileCrucible.getInventoryName();
+        this.fontRendererObj.drawString(s, 88 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);        //#404040
+        this.fontRendererObj.drawString("Inventory", 118, 72, 4210752);
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         List hoverList1 = new ArrayList<>();
@@ -169,20 +177,15 @@ public class GuiPlenaCrucible extends GuiContainer {
             hoverList1.add(EnumChatFormatting.DARK_RED + "" + Math.round(this.tileCrucible.temperature) + " °C");
         }
 
-
         List hoverList2 = new ArrayList<>();
         FluidStack fluidCheck = this.tileCrucible.tank.getFluid();
         Tessellator tes = new Tessellator();
-        if (mc.theWorld.getWorldTime() % 40 == 0) {
-            if (fluidAnimPosition < 0.8D) {
-                fluidAnimPosition += 0.2D;
-            } else {
-                fluidAnimPosition = 0.0D;
-            }
-        }
+
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glColor3f(1f, 1f, 1f);
+        //GL11.glDisable(GL11.GL_BLEND);
         if (fluidCheck != null) {
             if (fluidCheck.getFluid() == FluidRegistry.LAVA) {
                 double d1 = this.tileCrucible.tank.getFluidAmount() / 135000D;
@@ -193,19 +196,24 @@ public class GuiPlenaCrucible extends GuiContainer {
                 hoverList2.add(EnumChatFormatting.RED + "Lava");
                 String numFormatted = String.format("%,d",fluidCheck.amount);
                 hoverList2.add("" + numFormatted + "mb / " + EnumChatFormatting.DARK_PURPLE + "135,000mb");
-                this.mc.getTextureManager().bindTexture(new ResourceLocation("minecraft:textures/blocks/lava_still.png"));
+                IIcon fluidIcon = fluidCheck.getFluid().getIcon();
+                double u0 = fluidIcon.getInterpolatedU(0);
+                double u1 = fluidIcon.getInterpolatedU(16);
+                double v0 = fluidIcon.getInterpolatedV(0);
+                double v1 = fluidIcon.getInterpolatedV(16);
+                Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
                 tes.startDrawingQuads();
-                tes.addVertexWithUV(0, 1 - d1, 0, 0, fluidAnimPosition);
-                tes.addVertexWithUV(0, 1, 0, 0, (fluidAnimPosition + (0.2 * d1)));
-                tes.addVertexWithUV(1, 1, 0, 1, (fluidAnimPosition + (0.2 * d1)));
-                tes.addVertexWithUV(1, 1 - d1, 0, 1, fluidAnimPosition);
+                tes.addVertexWithUV(0, 1 - d1, 0, u0, v0);
+                tes.addVertexWithUV(0, 1, 0, u0, v1);
+                tes.addVertexWithUV(1, 1, 0, u1, v1);
+                tes.addVertexWithUV(1, 1 - d1, 0, u1, v0);
                 tes.draw();
                 GL11.glTranslatef(0, 0, 0);
                 GL11.glPopMatrix();
 
                 //this.drawTexturedModalRect(142, 15, 0, 0, 16, 55);
-            }
-            if (fluidCheck.getFluid() == FluidRegistry.WATER) {
+            }else if (fluidCheck.getFluid() == FluidRegistry.WATER) {
+
                 double d1 = this.tileCrucible.tank.getFluidAmount() / 135000D;
                 GL11.glPushMatrix();
                 GL11.glTranslatef(142, 15, 0);
@@ -213,20 +221,54 @@ public class GuiPlenaCrucible extends GuiContainer {
                 hoverList2.add(EnumChatFormatting.BLUE + "Water");
                 String numFormatted = String.format("%,d",fluidCheck.amount);
                 hoverList2.add("" + numFormatted + "mb / " + EnumChatFormatting.DARK_PURPLE + "135,000mb");
-                this.mc.getTextureManager().bindTexture(new ResourceLocation("minecraft:textures/blocks/water_still.png"));
+                IIcon fluidIcon = fluidCheck.getFluid().getIcon();
+                double u0 = fluidIcon.getInterpolatedU(0);
+                double u1 = fluidIcon.getInterpolatedU(16);
+                double v0 = fluidIcon.getInterpolatedV(0);
+                double v1 = fluidIcon.getInterpolatedV(16);
+                Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
                 tes.startDrawingQuads();
-                tes.addVertexWithUV(0, 1 - d1, 0, 0, fluidAnimPosition);
-                tes.addVertexWithUV(0, 1, 0, 0, (fluidAnimPosition + (0.2 * d1)));
-                tes.addVertexWithUV(1, 1, 0, 1, (fluidAnimPosition + (0.2 * d1)));
-                tes.addVertexWithUV(1, 1 - d1, 0, 1, fluidAnimPosition);
+                tes.addVertexWithUV(0, 1 - d1, 0, u0, v0);
+                tes.addVertexWithUV(0, 1, 0, u0, v1);
+                tes.addVertexWithUV(1, 1, 0, u1, v1);
+                tes.addVertexWithUV(1, 1 - d1, 0, u1, v0);
                 tes.draw();
                 GL11.glTranslatef(0, 0, 0);
                 GL11.glPopMatrix();
 
+            }else if(fluidCheck.getFluid() != null){
+                double d1 = this.tileCrucible.tank.getFluidAmount() / 135000D;
+                fluidCheck.getUnlocalizedName();
+
+                GL11.glPushMatrix();
+                GL11.glTranslatef(142, 15, 0);
+                GL11.glScalef(16f, 55f, 1f);
+                hoverList2.add(EnumChatFormatting.LIGHT_PURPLE + fluidCheck.getLocalizedName());
+                String numFormatted = String.format("%,d",fluidCheck.amount);
+                hoverList2.add("" + numFormatted + "mb / " + EnumChatFormatting.DARK_PURPLE + "135,000mb");
+                IIcon fluidIcon = fluidCheck.getFluid().getIcon();
+                double u0 = fluidIcon.getInterpolatedU(0);
+                double u1 = fluidIcon.getInterpolatedU(16);
+                double v0 = fluidIcon.getInterpolatedV(0);
+                double v1 = fluidIcon.getInterpolatedV(16);
+                Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+                tes.startDrawingQuads();
+//                tes.addVertexWithUV(0, 1 - d1, 0, u0, fluidAnimPosition);
+//                tes.addVertexWithUV(0, 1, 0, u0, (fluidAnimPosition + (0.2 * d1)));
+//                tes.addVertexWithUV(1, 1, 0, u1, (fluidAnimPosition + (0.2 * d1)));
+//                tes.addVertexWithUV(1, 1 - d1, 0, u1, fluidAnimPosition);
+                tes.addVertexWithUV(0, 1 - d1, 0, u0, v0);
+                tes.addVertexWithUV(0, 1, 0, u0, v1);
+                tes.addVertexWithUV(1, 1, 0, u1, v1);
+                tes.addVertexWithUV(1, 1 - d1, 0, u1, v0);
+                tes.draw();
+                GL11.glTranslatef(0, 0, 0);
+                GL11.glPopMatrix();
             }
         } else {
             hoverList2.add(EnumChatFormatting.ITALIC + "Empty");
         }
+        GL11.glEnable(GL11.GL_BLEND);
         this.mc.getTextureManager().bindTexture(new ResourceLocation(PlenaInanisReference.MODID + ":textures/gui/container/crucible.png"));
         this.drawTexturedModalRect(142, 15, 177, 1, 16, 55);
         List hoverList3 = new ArrayList<>();
@@ -249,7 +291,6 @@ public class GuiPlenaCrucible extends GuiContainer {
             hoverList4.clear();
             hoverList4.add("Dumping!");
         }
-        GL11.glDisable(GL11.GL_BLEND);
         //160, 14
         if(x > (k + 48) && x < (k + 61) && y > (l + 12) && y < (l + 25)){
             if(tileCrucible.temperature > 0) {
@@ -264,6 +305,7 @@ public class GuiPlenaCrucible extends GuiContainer {
         }else if(x > (k + 142) && x < (k + 158) && y > (l + 15) && y < (l + 70)){
             this.drawHoveringText(hoverList2, x - k, y - l, this.fontRendererObj);
         }
+
 
     }
     @Override

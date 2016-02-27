@@ -1,0 +1,27 @@
+<header>
+  <nav class="top-bar">
+    <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
+		<button class="menu-icon" type="button" data-toggle></button>
+		<div class="title-bar-title">Menu</div>
+	</div>
+
+	<div class="top-bar" id="main-menu">
+		<div class="top-bar-left">
+			<ul class="dropdown menu" data-dropdown-menu>
+			  <li class="menu-text">{% include /logo.html %}{% unless page.title == "Home" %}{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}{% endunless %}</li>
+			</ul>
+		</div>
+		<div class="top-bar-right" align="left">
+			  <li>
+				  <a href="/" class="sprite nav-home">
+				  <img src="/img/nav-home.png" alt="Home">
+				  </a>
+				  &nbsp;
+				  <a href="/about" class="sprite nav-about">
+				  <img src="/img/nav-about.png" alt="About">
+				  </a>
+			  </li>
+		</div>
+	</div>
+  </nav>
+</header>

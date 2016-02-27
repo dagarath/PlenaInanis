@@ -1,6 +1,0 @@
-{
-	"bloop":{
-		"sounds":[{"name":"bloop","stream":true}],"category":"neutral"},
-	"thwap":{
-		"sounds":[{"name":"thwap","stream":true}],"category":"neutral"}
-}

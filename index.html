@@ -1,0 +1,70 @@
+---
+layout: default
+title: Home
+permalink: /
+---
+
+
+    
+<div class="row full" >
+
+  <div class="sidebar medium-12 large-3 columns" >  
+	<div class="middle-header">	
+	  <h1>{{ site.title }}</h1>
+	  <h2>{{ site.subheading }}</h2>
+	  <a href="https://streamjar.tv/donate/Dagarath" class="button ghost">Donate</a>
+	  <a href="#" class="button ghost">Contact</a>
+	  <div class="social-header">
+		<a href="#"><i class="fi-social-facebook"></i></a>
+		<a href="#"><i class="fi-social-medium"></i></a>
+		<a href="#"><i class="fi-social-rdio"></i></a>
+	  </div>
+	</div> 
+  </div>
+      
+  <div class="content medium-12 large-9 columns">
+
+	<h4>Recent Posts</h4>
+	{% for post in paginator.posts %}
+	<article class="post">
+	{% assign author = site.authors[post.author] %}
+	  <a href="{{ author.about }}"><img alt="person" class="author" src="{{ author.avatar }}"></a>
+	  <h2>{{ post.title }}</h2>
+	  <img alt="funny but true comic" src="http://abstrusegoose.com/strips/you_down_wit_OPC-yeah_you_know_me.png">
+	  <p class="subheader">By <a href="{{ author.web }}">{{ author.display_name }}</a> under <a href="#"><span class="code label">Code</span></a> <a href="#"><span class="sad-panda label">Sad Panda</span></a></p>
+	  <div class="content">
+		{{ post.excerpt }}
+	  </div>
+	  <a href="{{ post.url }}" class="ghost button">Read more >></a>
+	</article>
+	{% endfor %}
+	  <h1></h1>
+	  <p class="author">
+		<span class="date">{{ post.date }}</span>
+	  </p>
+	  
+	
+
+	<!-- Pagination links -->
+	<div class="pagination">
+	  {% if paginator.previous_page %}
+		<a href="{{ paginator.previous_page_path }}" class="previous">Previous</a>
+	  {% else %}
+		<span class="previous">Previous</span>
+	  {% endif %}
+	  <span class="page_number ">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+	  {% if paginator.next_page %}
+		<a href="{{ paginator.next_page_path }}" class="next">Next</a>
+	  {% else %}
+		<span class="next ">Next</span>
+	  {% endif %}
+	</div>
+	<hr>
+
+  </div>
+</div>
+
+
+
+
+

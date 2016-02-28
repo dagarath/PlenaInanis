@@ -67,6 +67,11 @@ li.menu-text {
 	}
 }
 
+div.middle-header.bottom {
+	margin-top: 0;
+}
+
+
 .middle-header {
 	text-align: center;
 }
@@ -97,6 +102,13 @@ div.top-bar{
   	text-align: right;
   	@include centerer;
 	}
+	div.middle-header.top img {
+    margin-top: -100px;
+}
+
+div.middle-header.bottom {
+    margin-top: 110px;
+}
 }
 
 .content {

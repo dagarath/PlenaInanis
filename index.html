@@ -2,15 +2,16 @@
 layout: default
 title: Plena Inanis
 permalink: /
+author: dagarath
 ---
 
 
     
 <div class="row full" >
-{% assign author = site.authors[post.author] %}
+{% assign author = site.authors[page.author] %}
   <div class="sidebar medium-12 large-3 columns" >  
-	<div class="middle-header">	
-	  <h1>{{ site.title }}</h1>
+  <div class="middle-header top"><img src="/img/plena.png" alt="{{ site.title }}"></div>
+	<div class="middle-header bottom">	
 	  <h2>{{ site.subheading }}</h2>
 	  <a href="https://streamjar.tv/donate/Dagarath" class="button ghost">Donate</a>
 	  <a href="{{ author.email }}" class="button ghost">Contact</a>
@@ -27,7 +28,7 @@ permalink: /
 	<h4>Recent Posts</h4>
 	{% for post in paginator.posts %}
 	<article class="post">
-	
+	{% assign author = site.authors[post.author] %}
 	  <a href="{{ author.about }}"><img alt="person" class="author" src="{{ author.avatar }}"></a>
 	  <h2>{{ post.title }}</h2>
 	  <img alt="funny but true comic" src="http://abstrusegoose.com/strips/you_down_wit_OPC-yeah_you_know_me.png">

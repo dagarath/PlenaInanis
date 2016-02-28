@@ -3,4 +3,69 @@
 
 @import 'foundation';
 @include foundation-everything;
+nav.top-bar {
+    background-color: #000000;
+}
 
+div.top-bar{
+  background-color: rgba(0,0,0,0);
+}
+
+li.menu-text {
+    background-color: #000000 ;
+}
+
+main {
+  @include grid-row;
+  article {
+    header, div:first {
+      @include grid-column(12);
+    }
+  }
+  padding : {
+    left: 20px;
+    right: 20px;
+  }
+}
+
+.sprite {
+display: inline-block;
+width: 32px;
+height: 32px;
+overflow: hidden;
+position: relative;    
+}
+
+.sprite img {
+position: absolute;
+width: 32px;
+height: 64px;
+-webkit-transition: all 0.1s linear;
+-moz-transition: all 0.1s linear;
+-o-transition: all 0.1s linear;
+transition: all 0.1s linear;
+}
+.sprite:hover img {
+top: -32px;
+}
+
+.sprite-nav-home img {
+left: 0;
+top: 0;
+}
+.sprite-nav-about img {
+left: -32px;
+top: 0;
+}
+
+
+
+body{
+  background-image: url(img/daggerwrath.png)
+}
+
+footer {
+  padding: 20px;
+  background-color: black;
+  color: white;
+}

@@ -6,9 +6,10 @@
 	</div>
 
 	<div class="top-bar" id="main-menu">
-		<div class="top-bar-left">
+		<div class="top-bar-right">
 			<ul class="dropdown menu" data-dropdown-menu>
-			  <li class="menu-text">{% include /logo.html %}{% unless page.title == "Home" %}{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}{% endunless %}</li>
+			<li class="menu-text"> {% unless page.title == "Home" %}<a href="/">< Back</a>{% endunless %}</li>
+			  <li class="menu-text">{% include /logo.svg %}</li>
 			</ul>
 		</div>
 		<div class="top-bar-right" align="left">

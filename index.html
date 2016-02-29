@@ -12,10 +12,10 @@ author: dagarath
 	  <a href="{{ author.about }}"><img alt="person" class="author" align="right" src="{{ author.avatar }}"></a>
 	  <h2>{{ post.title }}</h2>
 	  <img alt="funny but true comic" src="{{ post.imageSource }}">
-	  <p class="subheader">By <a href="{{ author.web }}">{{ author.display_name }}</a> under 
+	  <p class="subheader">By <a href="{{ author.web }}">{{ author.display_name }}</a> under &nbsp;
 	 {% for tag in post.tags %}
 	 <a href="{{base_url}}/tags/{{ tag |downcase | slugize }}/" class="{{tag}} label">{{tag}}</a>
-	 {% unless forloop.last %}, {% endunless %}
+	 {% unless forloop.last %} &nbsp; {% endunless %}
 	 {% endfor %}
 	  <div class="article-content">
 		{{ post.excerpt }}

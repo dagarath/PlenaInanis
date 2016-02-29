@@ -23,7 +23,7 @@ $global-lineheight: 1.5 !default;
 /// Colors used for buttons, callouts, links, etc. There must always be a color called `primary`.
 /// @type Map
 $foundation-palette: (
-  primary: #2199e8,
+  primary: #4f79a3,
   secondary: #777,
   success: #3adb76,
   warning: #ffae00,
@@ -49,6 +49,14 @@ $black: #0a0a0a !default;
 /// Color used for white ui items.
 /// @type Color
 $white: #fefefe !default;
+
+$deep-yellow: #f28300 !default;
+
+$bright-yellow: #f3ea00 !default;
+
+$plena-blue: #34495e !default;
+
+$cool-blue: #69a4d4 !default;
 
 /// Background color of the body.
 /// @type Color

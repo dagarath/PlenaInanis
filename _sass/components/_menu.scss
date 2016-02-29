@@ -20,7 +20,7 @@ $menu-item-padding: 0.7rem 1rem !default;
 
 /// Text color of an active menu item.
 /// @type Color
-$menu-item-color-active: $white !default;
+$menu-item-color-active: $bright-yellow !default;
 
 /// Background color of an active menu item.
 /// @type Color
@@ -60,6 +60,11 @@ $menu-icon-spacing: 0.25rem !default;
     display: block;
     padding: $menu-item-padding;
     line-height: 1;
+	color: $cool-blue;
+  }
+  
+  > li > a:hover {
+	color: $bright-yellow;
   }
 
   // Reset styles of inner elements

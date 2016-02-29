@@ -5,16 +5,32 @@ layout: compress
 <html>
 
   {% include head.html %}
-
   <body>
-
-    {% include header.html %}
-
-    <main>
-        {{ content }}
-    </main>
-
-    {% include footer.html %}	
+	<div class="row full">
+		<div class="sidebar small-12 medium-4 large-2 columns">
+		{% include sidebar.html %} 	
+		</div>
+		<div class="main medium-8 large-10 columns">	
+			<div class="row">
+				<div class="nav medium-8 large-10 columns">
+					{% include header.html %}	
+				</div>
+			</div>	
+			<div class="row">
+				<div class="content medium-8 large-10 columns">
+				{{ content }}	
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="footer medium-8 large-10 columns">
+				{% include footer.html %}  
+				</div>
+			</div>
+		</div>		
+	</div>	
+		
+	
 
   </body>
 </html>

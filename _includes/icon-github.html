@@ -1,1 +1,2 @@
-<a href="https://github.com/{{ include.username }}"><span class="icon icon--github">{% include icon-github.svg %}</span><span class="username">{{ include.username }}</span></a>
+{% assign author = site.data.users[page.author] %}
+<a href="https://github.com/{{ author.github }}"><span class="icon icon--github">{% include icon-github.svg %}</span><span class="username">{{ author.github }}</span></a>

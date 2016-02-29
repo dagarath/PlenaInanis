@@ -76,6 +76,8 @@ div.middle-header.bottom {
 	text-align: center;
 }
 nav.top-bar {
+	position: fixed;
+	width: 100%;
     background-color: #3a444c;
 }
 div.top-bar{
@@ -112,6 +114,7 @@ div.middle-header.bottom {
 }
 
 .content {
+	top: 100px;
 	img {
 		width: 400px;
 	}
@@ -145,11 +148,16 @@ div.middle-header.bottom {
 		transition: .6s ease-in-out;
 	}
 }
+article.post {
+    padding-top: 75px;
+}
+
 footer {
+display: inline-block;
   padding: 20px;
   background-color: #3a444c;
   color: white;
-  position: absolute;
+  position: fixed;
     left: 0;
     bottom: 0;
     height: 100px;

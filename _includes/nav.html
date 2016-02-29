@@ -1,0 +1,23 @@
+<div class="top-bar" >
+  <div class="top-bar-left">
+  </div>
+  <div class="top-bar-right">
+    <ul class="menu" >      
+	{% if page.title == "Home" %}
+		<li class="active"><a href="/">Home</a></li>
+	{% else %}
+		<li><a href="/">Home</a></li>
+	{% endif %}
+	{% if page.title == "Contact" %}
+		<li class="active"><a href="/contact">Contact</a></li>
+	{% else %}
+		<li><a href="/contact">Contact</a></li>
+	{% endif %}
+    {% if page.title == "About" %}
+		<li class="active"><a href="/about">About</a></li>
+	{% else %}
+		<li><a href="/about">About</a></li>
+	{% endif %}
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+{% assign author = site.authors[page.author] %}
+<div class="middle-header top">
+	<a href="/"><img class="logo" src="/img/plena.png" alt="{{ site.title }}"></a>
+</div>
+<div class="middle-header bottom">	
+
+	<h2>{% unless page.title == "Home" %}{{page.title}}{% else %} {{ site.subheading }}{% endunless %}</h2>
+	<a href="{{ author.donate }}" class="button ghost">Donate</a>
+</div> 

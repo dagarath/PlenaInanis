@@ -68,7 +68,9 @@
 	h6{
 		font-family: 'Chewy', cursive;
 	}
-	font-family: 'Chewy', cursive;
+	p{
+		font-family: 'Chewy', cursive;
+	}
 }
 
 
@@ -78,6 +80,7 @@
 	background-color: #34495e;
 	top: 0;
 	bottom: 0;
+	padding-top: 25px;
 		h1 {
 			color: $cool-blue;
 			text-transform: uppercase;

@@ -8,7 +8,7 @@ author: dagarath
 	<h4>Recent Posts</h4>
 	{% for post in paginator.posts %}
 	<article class="post">
-	{% assign author = site.authors[post.author] %}
+	{% assign author = site.data.users[post.author] %}
 	  <a href="{{ author.about }}"><img alt="person" class="author" align="right" src="{{ author.avatar }}"></a>
 	  <h2>{{ post.title }}</h2>
 	  <img alt="funny but true comic" src="{{ post.imageSource }}">
@@ -28,8 +28,8 @@ author: dagarath
 	  <p class="author">
 		<span class="date">{{ post.date }}</span>
 	  </p>
-	  
-	
+
+
 
 	<!-- Pagination links -->
 	<div class="pagination">
@@ -46,8 +46,3 @@ author: dagarath
 	  {% endif %}
 	</div>
 	</div>
-
-
-
-
-

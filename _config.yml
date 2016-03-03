@@ -10,20 +10,9 @@ title: Plena Inanis
 subheading: Full on Empty
 email: dwrathgames@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  Site designed and maintained by Dagarath to showcase anything and everythings
-  related to Dagarath, Dagger Wrath Games or Dagger Wrath Development
+  Home of the Plena Inanis mod, a highly configurable replacement for Ex Nihilo
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://www.dagarath.com" # the base hostname & protocol for your site
-twitter_username: Dagarath
-github_username: Dagarath
-authors:
-  dagarath:
-     display_name: Dagarath
-     avatar: /img/dagarath.png
-     email: mailto:dwrathgames@gmail.com
-     web: http://www.dagarath.com
-     about: http://www.dagarath.com/about
-     donate: Dagarath
+url: "http://plena.dagarath.com" # the base hostname & protocol for your site
 
 # Build settings
 paginate: 5
